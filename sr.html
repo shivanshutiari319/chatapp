@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <form method="dialog" onsubmit="createfile()">
+        <input type="file" name="file" id="file">
+        <input type="submit" value="submit">
+    </form>
+    <div id="div1">
+
+    </div>
+</body>
+<script>
+    function createfile() {
+        let file = document.getElementById('file').files[0]
+        console.log(file)
+        let reader = new FileReader()
+        reader.onload = () => {
+            let arr = new Uint8Array(reader.result.byteLength)
+            let p = new Uint8Array(reader.result)
+            p.forEach((item, index) => {
+                arr[index] = item
+            })
+            console.log(new Uint8Array(reader.result), arr)
+            let blob = new Blob([arr], {
+                type: file.type
+            })
+            console.log(URL.createObjectURL(blob))
+            let a = document.createElement('a')
+            a.href = URL.createObjectURL(blob)
+            a.innerText = file.name
+            document.getElementById('div1').appendChild(a)
+                // let b = document.createElement('a')
+                // b.href = URL.createObjectURL(new Blob(new Uint8Array(reader.result)))
+                // b.innerText = file.name
+                // document.getElementById('div1').appendChild(b)
+        }
+        reader.readAsArrayBuffer(file)
+    }
+</script>
+
+</html>
